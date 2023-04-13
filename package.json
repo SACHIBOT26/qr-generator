@@ -1,8 +1,4 @@
 {
-
-
-
-
   "name": "qr-generator",
   "version": "1.0.0",
   "description": "Generates QR code using Node.js and Heroku",
@@ -18,7 +14,7 @@
     "fs-extra": "latest",
     "qrcode": "latest",
     "pastebin-js": "^1.0.6",
-    "heroku-client"
+    "heroku-client": "^5.2.2"
   },
   "engines": {
     "node": "14.x"
