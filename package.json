@@ -1,0 +1,27 @@
+{
+  "name": "qr-generator",
+  "version": "1.0.0",
+  "description": "Generates QR code using Node.js and Heroku",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "SACHIBOT26",
+  "license": "MIT",
+  "dependencies": {
+    "@adiwajshing/baileys": "^4.4.0",
+    "imgur": "^2.2.0",
+    "fs-extra": "latest"
+    "qrcode": "latest",
+    "pastebin-js": "^1.0.6"
+    "heroku-client": "^5.2.2"
+  }
+    "engines": {
+    "node": "14.x"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
