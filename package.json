@@ -4,7 +4,8 @@
   "description": "Generates QR code using Node.js and Heroku",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "postinstall": "npm install"
   },
   "author": "SACHIBOT26",
   "license": "MIT",
