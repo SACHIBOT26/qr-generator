@@ -1,89 +1,29 @@
-const PastebinAPI = require('pastebin-js');
+const express = require('express');
+const qrcode = require('qrcode');
+const { WAConnection, MessageType } = require('@adiwajshing/baileys');
 
-const { WAConnection } = require('@adiwajshing/baileys');
-
-const qr = require('qrcode');
-
-const ImgurClient = require('imgur');
-
-const fs = require('fs');
-
-const pastebin = new PastebinAPI('EMWTMkQAVfJa9kM-MRUrxd5Oku1U7pgL'); // Replace with your own API key
+const app = express();
 
 const conn = new WAConnection();
 
-// Connect to WhatsApp
+conn.on('qr', async (qrContent) => {
+  const qrImage = await qrcode.toDataURL(qrContent);
+  console.log(qrContent); // Output the QR code content to the console
+  app.get('/', (req, res) => {
+    res.send(`<img src="${qrImage}" alt="WhatsApp QR code">`);
+  });
+});
 
 conn.connect();
 
-// Get the session code and generate a QR code image
-
 conn.on('open', async () => {
-
-  const sessionCode = conn.base64EncodedAuthInfo();
-
-  const qrCode = await qr.toDataURL(sessionCode, { scale: 8 });
-
-qrCode.make(fit=True)
-
-img = qrCode.make_image(fill_color="black", back_color="white")
-
-img.save("qrcode.png")
-
-  // Create a new paste on Pastebin with the WhatsApp session code
-
-  const pasteText = `${sessionCode}`;
-
-  pastebin.createPaste({
-
-    'text': pasteText,
-
-    'title': 'WhatsApp session code and QR code',
-
-    'format': 'text'
-
-  })
-
-  .then(data => {
-
-    console.log(`Paste created: ${data}`);
-
-    // Send the paste URL to your WhatsApp account
-
-    conn.sendMessage('your_own_whatsapp_number@c.us', {
-
-      url: data
-
-    }, 'url');
-
-    // Download the QR code image to a file
-
-    const file = fs.createWriteStream('qrcode.png');
-
-    response.data.pipe(file);
-
-  })
-
-  .catch(err => console.error(err));
-
+  const session = conn.base64EncodedAuthInfo(); // Get session information
+  const message = `Here is your session code:\n\n${JSON.stringify(session, null, 2)}`; // Create message to send
+  const chatId = conn.user.id; // Replace with the connected number's chat ID
+  await conn.sendMessage(chatId, message, MessageType.text); // Send message
 });
 
-<!DOCTYPE html>
 
-<html>
-
-<head>
-
-  <meta charset="UTF-8">
-
-  <title>WhatsApp QR code</title>
-
-</head>
-
-<body>
-
-  <img src="qrcode.png" alt="WhatsApp QR code">
-
-</body>
-
-</html>
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`App running on port ${process.env.PORT || 3000}`);
+});
